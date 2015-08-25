@@ -20,17 +20,18 @@ var photourls = []string{"http://i.ytimg.com/vi/8MtQRv6aKx4/maxresdefault.jpg",
 
 func main() {
 	client := http.Client{}
-
-	for _, p := range photourls {
-		urlN := p
+	iterations := 4
+	photos := len(photourls)
+	for i := 0; i < photos*iterations; i++ {
+		urlN := photourls[i%photos]
 		fileURL, err := url.Parse(urlN)
 		path := fileURL.Path
 		segments := strings.Split(path, "/")
-		filename := segments[len(segments)-1]
+		filename := fmt.Sprintf("%v%v", i, segments[len(segments)-1])
 
 		file, err := os.Create(filename)
 		defer file.Close()
-		img, err := client.Get(p)
+		img, err := client.Get(photourls[i%photos])
 		if err != nil {
 			fmt.Println("error")
 			continue
